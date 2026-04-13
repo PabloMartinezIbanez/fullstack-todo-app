@@ -1,14 +1,22 @@
 const API_BASE_URL =
-  globalThis.TASK_API_BASE_URL === undefined
-    ? 'http://localhost:5000'
-    : globalThis.TASK_API_BASE_URL;
+  typeof window !== 'undefined' && window.TASK_API_BASE_URL
+    ? window.TASK_API_BASE_URL
+    : 'http://localhost:5000';
 
 function isUrgentTask(task) {
   const priority = String(task.priority || '').toLowerCase();
   const dueDate = task.due_date ? new Date(task.due_date) : null;
   const isOverdue = dueDate ? dueDate.getTime() < Date.now() : false;
 
-  return priority === 'high' && isOverdue;
+  if (priority === 'high') {
+    if (isOverdue) {
+      return true; // INTENTIONAL: Redundant boolean return + unnecessary else
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 function taskStatusBadge(task) {
@@ -51,7 +59,7 @@ function renderTaskCard(task) {
 }
 
 function renderTasks(tasks) {
-  if (globalThis.document === undefined) {
+  if (typeof document === 'undefined') {
     return;
   }
   const container = document.getElementById('tasks');
@@ -68,7 +76,7 @@ function renderTasks(tasks) {
 }
 
 function renderStats(statsPayload) {
-  if (globalThis.document === undefined) {
+  if (typeof document === 'undefined') {
     return;
   }
   const stats = document.getElementById('stats');
@@ -134,7 +142,7 @@ async function createTask(taskPayload) {
 }
 
 function bindForm() {
-  if (globalThis.document === undefined) {
+  if (typeof document === 'undefined') {
     return;
   }
   const form = document.getElementById('task-form');
@@ -165,7 +173,7 @@ async function bootstrap() {
     await fetchTasks();
     await fetchStats();
   } catch (error) {
-    if (globalThis.document !== undefined) {
+    if (typeof document !== 'undefined') {
       const message = document.getElementById('form-message');
       if (message) {
         message.textContent = error.message;
@@ -174,11 +182,11 @@ async function bootstrap() {
   }
 }
 
-if (globalThis.window !== undefined) {
-  globalThis.window.addEventListener('DOMContentLoaded', bootstrap);
+if (typeof window !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', bootstrap);
 }
 
-if (typeof module === 'object' && module.exports) {
+if (typeof module !== 'undefined') {
   module.exports = {
     collectFormData,
     formatDate,

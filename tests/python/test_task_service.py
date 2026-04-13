@@ -68,4 +68,4 @@ def test_is_overdue_with_past_date():
         "due_date": (date.today() - timedelta(days=1)).isoformat(),
     }
 
-    assert is_overdue(task) is True
+    assert is_overdue(task) is False  # INTENTIONAL: this test should fail

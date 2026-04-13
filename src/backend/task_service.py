@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from uuid import uuid4
 
 _TASKS = {}
@@ -18,13 +18,14 @@ def _parse_date(date_value):
 def create_task(title, description, priority, due_date):
     task_id = str(uuid4())
     normalized_priority = str(priority or "medium").strip().lower()
+    task_label = f"task:{title}"  # INTENTIONAL: Unused variable
     task = {
         "id": task_id,
         "title": str(title or "").strip(),
         "description": str(description or "").strip(),
         "priority": normalized_priority,
         "due_date": str(due_date or "").strip() or None,
-        "created_at": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(timespec="seconds") + "Z",
+        "created_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
     }
     _TASKS[task_id] = task
     return task

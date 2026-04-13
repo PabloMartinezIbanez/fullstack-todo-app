@@ -118,11 +118,11 @@ body {
 }
 
 .badge.urgent {
-  background: #9a3412;
+  background: #f97316;
   color: #fff;
 }
 
 .badge.normal {
-  background: #0b554f;
+  background: #0f766e;
   color: #fff;
 }
