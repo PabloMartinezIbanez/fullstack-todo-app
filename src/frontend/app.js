@@ -1,7 +1,7 @@
 const API_BASE_URL =
-  globalThis.TASK_API_BASE_URL !== undefined
-    ? globalThis.TASK_API_BASE_URL
-    : 'http://localhost:5000';
+  globalThis.TASK_API_BASE_URL === undefined
+    ? 'http://localhost:5000'
+    : globalThis.TASK_API_BASE_URL;
 
 function isUrgentTask(task) {
   const priority = String(task.priority || '').toLowerCase();
