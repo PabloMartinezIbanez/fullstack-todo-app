@@ -182,7 +182,7 @@ if (typeof globalThis.window !== 'undefined') {
   globalThis.window.addEventListener('DOMContentLoaded', bootstrap);
 }
 
-if (typeof module !== 'undefined') {
+if (typeof module === 'object' && module.exports) {
   module.exports = {
     collectFormData,
     formatDate,
