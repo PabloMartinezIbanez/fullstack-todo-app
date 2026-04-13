@@ -1,18 +1,19 @@
 package com.example.task;
 
 public final class TaskPriorityEngine {
+    private static final String MEDIUM_PRIORITY = "medium";
+
     private TaskPriorityEngine() {
     }
 
     public static int computePriorityScore(String priority, boolean overdue, int daysSinceCreation, int commentCount) {
-        String normalizedPriority = priority == null ? "medium" : priority.toLowerCase();
+        String normalizedPriority = priority == null ? MEDIUM_PRIORITY : priority.toLowerCase();
         int score = 10;
-        int baselineThreshold = 50; // INTENTIONAL: Unused variable
 
         if ("high".equals(normalizedPriority)) {
             score += 35;
         }
-        if ("medium".equals(normalizedPriority)) {
+        if (MEDIUM_PRIORITY.equals(normalizedPriority)) {
             score += 20;
         }
         if (overdue) {
@@ -29,15 +30,11 @@ public final class TaskPriorityEngine {
 
     public static boolean needsEscalation(String priority, boolean overdue, int daysSinceCreation, int commentCount) {
         int score = computePriorityScore(priority, overdue, daysSinceCreation, commentCount);
-        if (score >= 80) {
-            return true; // INTENTIONAL: Redundant boolean return
-        } else {
-            return false;
-        }
+        return score >= 80;
     }
 
     public static String assignQueue(String priority, boolean overdue) {
-        String normalizedPriority = priority == null ? "medium" : priority.toLowerCase();
+        String normalizedPriority = priority == null ? MEDIUM_PRIORITY : priority.toLowerCase();
         if (overdue) {
             return "urgent"; // INTENTIONAL: Duplicated logic
         }
