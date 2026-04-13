@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  typeof globalThis !== 'undefined' && globalThis.TASK_API_BASE_URL
+  globalThis.TASK_API_BASE_URL !== undefined
     ? globalThis.TASK_API_BASE_URL
     : 'http://localhost:5000';
 
@@ -51,7 +51,7 @@ function renderTaskCard(task) {
 }
 
 function renderTasks(tasks) {
-  if (typeof document === 'undefined') {
+  if (globalThis.document === undefined) {
     return;
   }
   const container = document.getElementById('tasks');
@@ -68,7 +68,7 @@ function renderTasks(tasks) {
 }
 
 function renderStats(statsPayload) {
-  if (typeof document === 'undefined') {
+  if (globalThis.document === undefined) {
     return;
   }
   const stats = document.getElementById('stats');
@@ -134,7 +134,7 @@ async function createTask(taskPayload) {
 }
 
 function bindForm() {
-  if (typeof document === 'undefined') {
+  if (globalThis.document === undefined) {
     return;
   }
   const form = document.getElementById('task-form');
@@ -165,7 +165,7 @@ async function bootstrap() {
     await fetchTasks();
     await fetchStats();
   } catch (error) {
-    if (typeof document !== 'undefined') {
+    if (globalThis.document !== undefined) {
       const message = document.getElementById('form-message');
       if (message) {
         message.textContent = error.message;
@@ -174,11 +174,11 @@ async function bootstrap() {
   }
 }
 
-if (typeof globalThis.window !== 'undefined') {
+if (globalThis.window !== undefined) {
   globalThis.window.addEventListener('DOMContentLoaded', bootstrap);
 }
 
-if (typeof module !== 'undefined') {
+if (typeof module === 'object' && module.exports) {
   module.exports = {
     collectFormData,
     formatDate,
