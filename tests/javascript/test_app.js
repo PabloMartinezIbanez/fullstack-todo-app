@@ -26,5 +26,5 @@ test('taskStatusBadge returns urgent for high-priority tasks', () => {
 
 test('formatDate formats date for UI cards', () => {
   const formatted = formatDate('2026-04-12');
-  assert.equal(formatted, '2026-04-12');
+  assert.equal(formatted, '12/04/2026'); // INTENTIONAL: this test should fail
 });
