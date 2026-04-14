@@ -1,6 +1,6 @@
 const API_BASE_URL =
-  typeof window !== 'undefined' && window.TASK_API_BASE_URL
-    ? window.TASK_API_BASE_URL
+  typeof globalThis !== 'undefined' && globalThis.TASK_API_BASE_URL
+    ? globalThis.TASK_API_BASE_URL
     : 'http://localhost:5000';
 
 function isUrgentTask(task) {
@@ -9,11 +9,7 @@ function isUrgentTask(task) {
   const isOverdue = dueDate ? dueDate.getTime() < Date.now() : false;
 
   if (priority === 'high') {
-    if (isOverdue) {
-      return true; // INTENTIONAL: Redundant boolean return + unnecessary else
-    } else {
-      return false;
-    }
+    return isOverdue;
   } else {
     return false;
   }
@@ -182,8 +178,8 @@ async function bootstrap() {
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('DOMContentLoaded', bootstrap);
+if (typeof globalThis !== 'undefined' && globalThis.addEventListener) {
+  globalThis.addEventListener('DOMContentLoaded', bootstrap);
 }
 
 if (typeof module !== 'undefined') {
