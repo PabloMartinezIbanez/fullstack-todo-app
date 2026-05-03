@@ -175,7 +175,7 @@ pipeline {
             steps {
                 echo "Attempting to fix issues with AI..."
                 FixWithAI(
-                    llmModel: 'gemini-3.1-pro-preview',
+                    llmModel: 'gemini-2.5-flash',
                     llmCredentialId: 'LLM_API_KEY_VALUE',
                     githubCredentialId: 'Github_AI_Auth',
                     repoSlug: 'PabloMartinezIbanez/fullstack-todo-app',
