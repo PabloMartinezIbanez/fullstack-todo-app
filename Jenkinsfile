@@ -175,7 +175,7 @@ pipeline {
             steps {
                 echo "Attempting to fix issues with AI..."
                 FixWithAI(
-                    llmModel: 'gemini-2.5-flash',
+                    llmModel: 'deepseek-v4-pro',
                     llmCredentialId: 'LLM_API_KEY_VALUE',
                     githubCredentialId: 'Github_AI_Auth',
                     repoSlug: 'PabloMartinezIbanez/fullstack-todo-app',
