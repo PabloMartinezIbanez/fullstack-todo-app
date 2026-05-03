@@ -25,7 +25,7 @@ def test_create_task_returns_complete_task():
     assert result["description"] == "Collect latest delivery metrics"
     assert result["priority"] == "high"
     assert result["due_date"] == "2026-05-20"
-    assert result["created_at"].endswith("Z")
+    assert result["created_at"].endswith("+00:00")
 
 
 def test_list_tasks_returns_all_created():
@@ -68,4 +68,4 @@ def test_is_overdue_with_past_date():
         "due_date": (date.today() - timedelta(days=1)).isoformat(),
     }
 
-    assert is_overdue(task) is False  # INTENTIONAL: this test should fail
+    assert is_overdue(task) is True

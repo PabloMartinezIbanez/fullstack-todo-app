@@ -1,6 +1,6 @@
 const API_BASE_URL =
-  typeof window !== 'undefined' && window.TASK_API_BASE_URL
-    ? window.TASK_API_BASE_URL
+  typeof globalThis.window !== 'undefined' && globalThis.window.TASK_API_BASE_URL
+    ? globalThis.window.TASK_API_BASE_URL
     : 'http://localhost:5000';
 
 function isUrgentTask(task) {
@@ -8,15 +8,7 @@ function isUrgentTask(task) {
   const dueDate = task.due_date ? new Date(task.due_date) : null;
   const isOverdue = dueDate ? dueDate.getTime() < Date.now() : false;
 
-  if (priority === 'high') {
-    if (isOverdue) {
-      return true; // INTENTIONAL: Redundant boolean return + unnecessary else
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
+  return priority === 'high' && isOverdue;
 }
 
 function taskStatusBadge(task) {
@@ -42,7 +34,11 @@ function formatDate(dateStr) {
   if (Number.isNaN(dateObj.getTime())) {
     return 'Invalid date';
   }
-  return dateObj.toISOString().slice(0, 10);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+  const year = dateObj.getFullYear();
+
+  return `${day}/${month}/${year}`;
 }
 
 function renderTaskCard(task) {
@@ -182,8 +178,8 @@ async function bootstrap() {
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('DOMContentLoaded', bootstrap);
+if (typeof globalThis.window !== 'undefined') {
+  globalThis.window.addEventListener('DOMContentLoaded', bootstrap);
 }
 
 if (typeof module !== 'undefined') {
