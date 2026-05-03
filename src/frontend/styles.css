@@ -119,7 +119,7 @@ body {
 
 .badge.urgent {
   background: #f97316;
-  color: #fff;
+  color: #333;
 }
 
 .badge.normal {
