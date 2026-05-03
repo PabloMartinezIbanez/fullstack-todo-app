@@ -104,8 +104,6 @@ pipeline {
                         failedSuites << 'java'
                     }
 
-                    archiveArtifacts artifacts: "${env.AI_REPORTS_DIR}/*", fingerprint: true, allowEmptyArchive: true
-
                     if (failedSuites) {
                         error("Test suites failed: ${failedSuites.join(', ')}")
                     }
@@ -190,6 +188,7 @@ pipeline {
 
     post {
         always {
+            archiveArtifacts artifacts: "${env.AI_REPORTS_DIR}/*", fingerprint: true, allowEmptyArchive: true
             cleanWs(
                 cleanWhenSuccess: true,
                 cleanWhenFailure: false,
