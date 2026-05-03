@@ -1,5 +1,8 @@
 @Library('AI_agents_for_CI_shared_library') _
 
+def aiAlreadyApplied = false
+def runSonarAndFix = false
+
 pipeline {
     agent {
         node {
@@ -101,8 +104,6 @@ pipeline {
                         failedSuites << 'java'
                     }
 
-                    archiveArtifacts artifacts: "${env.AI_REPORTS_DIR}/*", fingerprint: true, allowEmptyArchive: true
-
                     if (failedSuites) {
                         error("Test suites failed: ${failedSuites.join(', ')}")
                     }
@@ -110,9 +111,29 @@ pipeline {
             }
         }
 
-        stage('Scan') {
+        stage('Detect Previous AI Fix') {
             when {
                 expression { env.CHANGE_ID && !((env.CHANGE_BRANCH ?: '').startsWith('ai-fix/')) }
+            }
+            steps {
+                script {
+                    aiAlreadyApplied = DetectPreviousAIFix(
+                        repoSlug: 'PabloMartinezIbanez/fullstack-todo-app',
+                        reportsDir: env.AI_REPORTS_DIR,
+                        sourceBranch: env.CHANGE_BRANCH
+                    )
+
+                    runSonarAndFix =
+                        env.CHANGE_ID &&
+                        !((env.CHANGE_BRANCH ?: '').startsWith('ai-fix/')) &&
+                        !aiAlreadyApplied
+                }
+            }
+        }
+
+        stage('Scan') {
+            when {
+                expression { runSonarAndFix }
             }
             steps {
                 script {
@@ -138,7 +159,7 @@ pipeline {
 
         stage('Quality Gate') {
             when {
-                expression { env.CHANGE_ID && !((env.CHANGE_BRANCH ?: '').startsWith('ai-fix/')) }
+                expression { runSonarAndFix }
             }
             steps {
                 script {
@@ -149,12 +170,12 @@ pipeline {
 
         stage('Fix Issues with AI') {
             when {
-                expression { env.CHANGE_ID && !((env.CHANGE_BRANCH ?: '').startsWith('ai-fix/')) }
+                expression { runSonarAndFix }
             }
             steps {
                 echo "Attempting to fix issues with AI..."
                 FixWithAI(
-                    llmModel: 'gemini-3.1-pro-preview',
+                    llmModel: 'kimi-k2-instruct',
                     llmCredentialId: 'LLM_API_KEY_VALUE',
                     githubCredentialId: 'Github_AI_Auth',
                     repoSlug: 'PabloMartinezIbanez/fullstack-todo-app',
@@ -167,6 +188,7 @@ pipeline {
 
     post {
         always {
+            archiveArtifacts artifacts: "${env.AI_REPORTS_DIR}/*", fingerprint: true, allowEmptyArchive: true
             cleanWs(
                 cleanWhenSuccess: true,
                 cleanWhenFailure: false,
